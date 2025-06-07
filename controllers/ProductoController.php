@@ -1,36 +1,27 @@
 <?php
-require_once "../config/Database.php";
-require_once "../models/producto.php";
+require_once "models/Producto.php";
 
-class ProducController {
-    private $db;
-    private $producto;
+class ProductoController {
+    private $modelo;
 
     public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
-        $this->producto = new Producto($this->db);
-    }
-
-    public function listar() {
-        $stmt = $this->producto->listar();
-        $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        require_once "../views/productos/listar.php";
+        $this->modelo = new Producto();
     }
 
     public function registrar() {
-        if($_POST) {
-            $this->producto->nombre = $_POST['nombre'] ?? '';
-            $this->producto->cantidad = $_POST['cantidad'] ?? 0;
-            $this->producto->precio_unitario = $_POST['precio_unitario'] ?? 0;
-
-            if($this->producto->registrar()) {
-                header("Location: index.php?action=listar");
-                exit;
-            } else {
-                $error = "No se pudo registrar el producto.";
-            }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = $_POST['nombre'];
+            $cantidad = $_POST['cantidad'];
+            $precio = $_POST['precio_unitario'];
+            $this->modelo->registrar($nombre, $cantidad, $precio);
+            header("Location: index.php?action=listar");
+        } else {
+            require_once "views/registrar.php";
         }
-        require_once "../views/productos/registrar.php";
+    }
+
+    public function listar() {
+        $productos = $this->modelo->obtenerTodos();
+        require_once "views/listar.php";
     }
 }
