@@ -1,32 +1,33 @@
-<?php
-ob_start();
-?>
-
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-            <th>Valor Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if (count($productos) > 0): ?>
-            <?php foreach($productos as $prod): ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <h2>Lista de Productos</h2>
+    <table border="1">
+        <thead>
             <tr>
-                <td><?php echo htmlspecialchars($prod['nombre']); ?></td>
-                <td><?php echo $prod['cantidad']; ?></td>
-                <td>$<?php echo number_format($prod['precio_unitario'], 2); ?></td>
-                <td>$<?php echo number_format($prod['cantidad'] * $prod['precio_unitario'], 2); ?></td>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
             </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($productos as $producto): ?>
+                <tr>
+                    <td><?= htmlspecialchars($producto['nombre']) ?></td>
+                    <td><?= $producto['cantidad'] ?></td>
+                    <td>$<?= number_format($producto['precio_unitario'], 2) ?></td>
+                    <td>$<?= number_format($producto['cantidad'] * $producto['precio_unitario'], 2) ?></td>
+                </tr>
             <?php endforeach; ?>
-        <?php else: ?>
-            <tr><td colspan="4">No hay productos registrados.</td></tr>
-        <?php endif; ?>
-    </tbody>
-</table>
-
-<?php
-$content = ob_get_clean();
-require_once "../view/layout.php";
+        </tbody>
+    </table>
+    <br>
+    <a href="index.php?action=registrar">Registrar otro producto</a>
+</body>
+</html>
